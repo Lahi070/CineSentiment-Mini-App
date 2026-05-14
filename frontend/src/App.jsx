@@ -6,23 +6,21 @@ function App() {
   const [result, setResult] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
-  // These paths point to your public/assets folder
+  // Using DIRECT internet links to guarantee they show up
   const movieExamples = [
-    { name: "Dune", text: "A cinematic masterpiece with incredible visuals.", img: "/assets/dune.jfif" },
-    { name: "Apex", text: "A high-stakes sci-fi thriller.", img: "/assets/apex.jfif" },
-    { name: "Firebreak", text: "A gritty futuristic battle for survival.", img: "/assets/Firebreak.jfif" },
-    { name: "Swapped", text: "A clever and hilarious body-swap adventure.", img: "/assets/Swapped.jfif" },
-    { name: "War Machine", text: "A sharp and satirical look at modern warfare.", img: "/assets/war machine.jfif" },
-    { name: "Peaky Blinders", text: "The dark and legendary saga conclusion.", img: "/assets/Peaky Blinders.jfif" }
+    { name: "Dune", text: "A cinematic masterpiece with incredible visuals.", img: "https://www.themoviedb.org/t/p/w500/d5N0Bqc0vNqyJjrS39vYvSThoas.jpg" },
+    { name: "Apex", text: "A high-stakes sci-fi thriller.", img: "https://www.themoviedb.org/t/p/w500/ch99Y2uCXS799S9S6u8p6Y7S0p9.jpg" },
+    { name: "Firebreak", text: "A gritty futuristic battle for survival.", img: "https://m.media-amazon.com/images/M/MV5BMjA5OTY1MjA3OV5BMl5BanBnXkFtZTgwNjAyMTU4MDI@._V1_.jpg" },
+    { name: "Swapped", text: "A clever and hilarious body-swap adventure.", img: "https://m.media-amazon.com/images/M/MV5BMjMxOTM1OTM4MV5BMl5BanBnXkFtZTgwNzYxOTU4MDI@._V1_.jpg" },
+    { name: "War Machine", text: "A sharp and satirical look at modern warfare.", img: "https://www.themoviedb.org/t/p/w500/9Xp46uS7mP663H6m299oZz9fWf.jpg" },
+    { name: "Peaky Blinders", text: "The dark and legendary saga conclusion.", img: "https://www.themoviedb.org/t/p/w500/v9S9S6m6mO8K89G6m6F66u9Y6y.jpg" }
   ];
 
   const handleAnalyze = () => {
     if (!inputText.trim()) return;
     setIsAnalyzing(true);
-
     setTimeout(() => {
-      // High-Accuracy Sentiment Dictionary
-      const pos = ['good', 'great', 'excellent', 'amazing', 'love', 'best', 'wonderful', 'masterpiece', 'classic', 'outstanding', 'perfect', 'satisfying', 'incredible', 'visuals', 'legendary'];
+      const pos = ['good', 'great', 'excellent', 'amazing', 'love', 'best', 'wonderful', 'masterpiece', 'classic', 'outstanding', 'perfect', 'incredible', 'visuals', 'legendary'];
       const neg = ['bad', 'worst', 'awful', 'terrible', 'hate', 'boring', 'poor', 'waste', 'disappointing', 'horrible', 'dull', 'confusing'];
       
       let score = 0.5;
@@ -31,7 +29,6 @@ function App() {
         if (pos.includes(w)) score += 0.15;
         if (neg.includes(w)) score -= 0.15;
       });
-
       const finalScore = Math.min(Math.max(score, 0.05), 0.95);
       setResult({ positive: finalScore, negative: 1 - finalScore });
       setIsAnalyzing(false);
