@@ -53,13 +53,13 @@ body {
 .movie-item {
   height: 150px;
   border-radius: 12px;
-  background-size: cover;
+  /* These lines are very important for images to show */
+  background-size: cover; 
   background-position: center;
+  background-repeat: no-repeat;
   cursor: pointer;
   position: relative;
-  border: 2px solid transparent;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255,255,255,0.1);
 }
 
 .movie-item:hover {
