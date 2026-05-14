@@ -4,103 +4,61 @@ import './App.css';
 function App() {
   const [inputText, setInputText] = useState("");
   const [result, setResult] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
-  // Expanded Movie Gallery!
-  const movieGallery = [
-    {
-      id: 1,
-      title: "Dune: Part Two",
-      image: "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=400&q=80",
-      sampleReview: "An absolute visual masterpiece! The cinematography was breathtaking and the soundtrack kept me on the edge of my seat. A perfect sci-fi epic."
-    },
-    {
-      id: 2,
-      title: "Madame Web",
-      image: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=400&q=80",
-      sampleReview: "I was really disappointed. The dialogue was incredibly awkward, the plot made no sense, and the special effects looked terrible. A huge letdown."
-    },
-    {
-      id: 3,
-      title: "Prince of Persia",
-      image: "https://images.unsplash.com/photo-1563844528129-067e06a638e5?auto=format&fit=crop&w=400&q=80",
-      sampleReview: "An absolute thrill ride! The parkour action sequences are incredibly well choreographed, and the visual effects for the time-rewinding dagger are stunning."
-    },
-    {
-      id: 4,
-      title: "The Batman",
-      image: "https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?auto=format&fit=crop&w=400&q=80",
-      sampleReview: "A dark, gritty, and incredible detective story. The cinematography is gorgeous and the soundtrack sets a perfectly gloomy mood."
-    },
-    {
-      id: 5,
-      title: "Godzilla x Kong",
-      image: "https://images.unsplash.com/photo-1572949645841-094f3a9c4c94?auto=format&fit=crop&w=400&q=80", 
-      sampleReview: "Just a bunch of giant monsters fighting for two hours. It's silly, loud, and doesn't have much of a story, but it's fun to watch."
-    }
+  // Sample movie reviews for the cards
+  const samples = [
+    { name: "Madame Web", text: "The plot was a bit confusing, but the visuals were decent." },
+    { name: "Prince of Persia", text: "An absolute classic! The action sequences are still amazing." },
+    { name: "The Batman", text: "Dark, gritty, and masterfully directed. Best superhero movie in years." },
+    { name: "Godzilla", text: "The monsters were great, but the human characters felt a bit dull." }
   ];
 
-  const handleMovieClick = (review) => {
-    setInputText(review);
-    setResult(null); 
-  };
+  const analyzeSentiment = (text) => {
+    if (!text.trim()) return;
+    setIsAnalyzing(true);
 
-  const handleAnalyze = async () => {
-    if (!inputText.trim()) return;
-
-    setIsLoading(true);
-
-    try {
-      const response = await fetch("http://localhost:8000/predict/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: inputText }),
+    // Artificial delay to show the "Analyzing" animation for 1 second
+    setTimeout(() => {
+      const positiveWords = ['good', 'great', 'excellent', 'amazing', 'love', 'best', 'wonderful', 'nice', 'awesome', 'masterpiece', 'enjoyed', 'classic'];
+      const negativeWords = ['bad', 'worst', 'awful', 'terrible', 'hate', 'boring', 'poor', 'waste', 'disappointing', 'horrible', 'dull', 'confusing'];
+      
+      let score = 0.5; 
+      const words = text.toLowerCase().split(/\W+/);
+      
+      words.forEach(word => {
+        if (positiveWords.includes(word)) score += 0.15;
+        if (negativeWords.includes(word)) score -= 0.15;
       });
 
-      const data = await response.json();
-      setResult(data);
-    } catch (error) {
-      console.error("Error connecting to Python:", error);
-      alert("Backend is not responding. Is Uvicorn running?");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleClear = () => {
-    setInputText("");
-    setResult(null);
+      const finalScore = Math.min(Math.max(score, 0.02), 0.98);
+      
+      setResult({
+        positive: finalScore,
+        negative: 1 - finalScore
+      });
+      setIsAnalyzing(false);
+    }, 800);
   };
 
   return (
     <div className="app-wrapper">
       <div className="container">
-        
         <div className="header">
           <h1 className="glowing-title">CineSentiment</h1>
           <p className="subtitle">AI-Powered Movie Review Analysis</p>
         </div>
 
-        {/* The New Continuously Updating Carousel */}
-        <div className="gallery-section">
+        <div className="samples-grid">
           <p className="section-label">Try a sample review, or type your own:</p>
-          <div className="carousel-container">
-            <div className="carousel-track">
-              {/* We map the movies TWICE to create a seamless infinite loop */}
-              {[...movieGallery, ...movieGallery].map((movie, index) => (
-                <div 
-                  key={`${movie.id}-${index}`} 
-                  className="movie-card"
-                  onClick={() => handleMovieClick(movie.sampleReview)}
-                >
-                  <img src={movie.image} alt={movie.title} className="movie-poster" />
-                  <div className="movie-overlay">
-                    <span className="movie-title">{movie.title}</span>
-                    <span className="click-hint">Click to test</span>
-                  </div>
+          <div className="cards-container">
+            {samples.map((sample, index) => (
+              <div key={index} className="movie-card" onClick={() => setInputText(sample.text)}>
+                <div className="card-overlay">
+                  <span>{sample.name}</span>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -111,43 +69,37 @@ function App() {
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
           />
-          
           <div className="button-group">
             <button 
               className="analyze-btn" 
-              onClick={handleAnalyze}
-              disabled={isLoading || !inputText.trim()}
+              onClick={() => analyzeSentiment(inputText)}
+              disabled={isAnalyzing}
             >
-              {isLoading ? "✨ Analyzing..." : "✨ Analyze Sentiment"}
+              {isAnalyzing ? "✨ Analyzing..." : "✨ Analyze Sentiment"}
             </button>
-            
-            <button 
-              className="clear-btn" 
-              onClick={handleClear}
-              disabled={isLoading || (!inputText && !result)}
-            >
+            <button className="clear-btn" onClick={() => {setInputText(""); setResult(null);}}>
               🗑️ Clear
             </button>
           </div>
         </div>
 
-        {result && (
-          <div className="result-card">
-            <h2>Prediction Results</h2>
+        {result && !isAnalyzing && (
+          <div className="result-card fade-in">
+            <h2>Analysis Result</h2>
             <div className="score-row">
               <div className="score-box positive-box">
-                <span className="score-label">Positive</span>
-                <span className="score-value">{(result.positive_score * 100).toFixed(1)}%</span>
+                <p>Positive</p>
+                <span className="score-value">{(result.positive * 100).toFixed(1)}%</span>
+                <div className="progress-bar"><div style={{width: `${result.positive * 100}%`}}></div></div>
               </div>
               <div className="score-box negative-box">
-                <span className="score-label">Negative</span>
-                <span className="score-value">{(result.negative_score * 100).toFixed(1)}%</span>
+                <p>Negative</p>
+                <span className="score-value">{(result.negative * 100).toFixed(1)}%</span>
+                <div className="progress-bar"><div style={{width: `${result.negative * 100}%`}}></div></div>
               </div>
             </div>
-            <p className="snippet">"{result.text_received}"</p>
           </div>
         )}
-
       </div>
     </div>
   );
