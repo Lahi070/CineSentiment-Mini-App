@@ -1,9 +1,8 @@
-/* Custom Modern AI Interface Styles */
 body {
   margin: 0;
   background-color: #0f172a;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  -webkit-font-smoothing: antialiased;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: white;
 }
 
 .app-container {
@@ -11,88 +10,47 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  padding: 40px 20px;
+  padding: 20px;
 }
 
 .card {
   background: #1e293b;
   width: 100%;
-  max-width: 650px;
-  padding: 30px;
-  border-radius: 28px;
+  max-width: 500px;
+  padding: 40px;
+  border-radius: 24px;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
 }
 
 .title {
-  font-size: 2.2rem;
+  font-size: 2.5rem;
   font-weight: 800;
   margin: 0 0 10px 0;
   background: linear-gradient(to right, #818cf8, #c084fc);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-align: center;
 }
 
 .subtitle {
   color: #94a3b8;
-  text-align: center;
-  margin-bottom: 25px;
-  font-size: 0.9rem;
-}
-
-/* Stable Movie Grid */
-.movie-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin-bottom: 25px;
-}
-
-.movie-item {
-  height: 150px;
-  border-radius: 12px;
-  /* These lines are very important for images to show */
-  background-size: cover; 
-  background-position: center;
-  background-repeat: no-repeat;
-  cursor: pointer;
-  position: relative;
-  border: 1px solid rgba(255,255,255,0.1);
-}
-
-.movie-item:hover {
-  transform: translateY(-5px);
-  border-color: #818cf8;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
-}
-
-.movie-label {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  background: rgba(0, 0, 0, 0.8);
-  font-size: 10px;
-  font-weight: bold;
-  text-align: center;
-  padding: 6px 0;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-  color: white;
+  margin-bottom: 30px;
+  font-size: 1rem;
 }
 
 textarea {
   width: 100%;
-  height: 120px;
+  height: 160px;
   background: #0f172a;
   border: 1px solid #334155;
   border-radius: 16px;
   color: white;
   padding: 15px;
-  font-size: 15px;
+  font-size: 16px;
   resize: none;
   box-sizing: border-box;
+  margin-bottom: 20px;
   transition: border-color 0.2s;
 }
 
@@ -104,35 +62,28 @@ textarea:focus {
 .button-row {
   display: flex;
   gap: 12px;
-  margin-top: 20px;
 }
 
 .btn-analyze {
   flex: 2;
-  padding: 16px;
   background: #6366f1;
   color: white;
   border: none;
+  padding: 16px;
   border-radius: 12px;
   font-weight: 700;
-  font-size: 16px;
   cursor: pointer;
-  transition: opacity 0.2s;
+  font-size: 1rem;
 }
 
 .btn-clear {
   flex: 1;
-  padding: 16px;
   background: #334155;
-  color: #cbd5e1;
+  color: white;
   border: none;
+  padding: 16px;
   border-radius: 12px;
-  font-weight: 600;
   cursor: pointer;
-}
-
-.btn-analyze:hover, .btn-clear:hover {
-  opacity: 0.9;
 }
 
 .results {
@@ -140,22 +91,19 @@ textarea:focus {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
-  background: rgba(15, 23, 42, 0.4);
+  background: rgba(15, 23, 42, 0.5);
   padding: 20px;
   border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.score-item {
-  text-align: center;
+.score-item p {
+  color: #94a3b8;
+  margin: 0;
+  font-size: 12px;
+  font-weight: bold;
 }
 
 .score-item h2 {
   margin: 5px 0 0 0;
   font-size: 2rem;
-}
-
-@media (max-width: 480px) {
-  .movie-grid { grid-template-columns: repeat(2, 1fr); }
-  .card { padding: 20px; }
 }
