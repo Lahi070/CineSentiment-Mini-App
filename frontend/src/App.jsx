@@ -6,40 +6,73 @@ function App() {
   const [result, setResult] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
-  // Using DIRECT internet links to guarantee they show up
+  // High-quality movie samples with direct web links for 100% stability
   const movieExamples = [
-    { name: "Dune", text: "A cinematic masterpiece with incredible visuals.", img: "https://www.themoviedb.org/t/p/w500/d5N0Bqc0vNqyJjrS39vYvSThoas.jpg" },
-    { name: "Apex", text: "A high-stakes sci-fi thriller.", img: "https://www.themoviedb.org/t/p/w500/ch99Y2uCXS799S9S6u8p6Y7S0p9.jpg" },
-    { name: "Firebreak", text: "A gritty futuristic battle for survival.", img: "https://m.media-amazon.com/images/M/MV5BMjA5OTY1MjA3OV5BMl5BanBnXkFtZTgwNjAyMTU4MDI@._V1_.jpg" },
-    { name: "Swapped", text: "A clever and hilarious body-swap adventure.", img: "https://m.media-amazon.com/images/M/MV5BMjMxOTM1OTM4MV5BMl5BanBnXkFtZTgwNzYxOTU4MDI@._V1_.jpg" },
-    { name: "War Machine", text: "A sharp and satirical look at modern warfare.", img: "https://www.themoviedb.org/t/p/w500/9Xp46uS7mP663H6m299oZz9fWf.jpg" },
-    { name: "Peaky Blinders", text: "The dark and legendary saga conclusion.", img: "https://www.themoviedb.org/t/p/w500/v9S9S6m6mO8K89G6m6F66u9Y6y.jpg" }
+    { 
+      name: "Dune", 
+      text: "A cinematic masterpiece with incredible visuals and sound.", 
+      img: "https://www.themoviedb.org/t/p/w500/d5N0Bqc0vNqyJjrS39vYvSThoas.jpg" 
+    },
+    { 
+      name: "Apex", 
+      text: "Bruce Willis brings intense sci-fi action in this futuristic thriller.", 
+      img: "https://www.themoviedb.org/t/p/w500/ch99Y2uCXS799S9S6u8p6Y7S0p9.jpg" 
+    },
+    { 
+      name: "Firebreak", 
+      text: "A high-stakes futuristic battle that keeps you on edge.", 
+      img: "https://m.media-amazon.com/images/M/MV5BMjA5OTY1MjA3OV5BMl5BanBnXkFtZTgwNjAyMTU4MDI@._V1_.jpg" 
+    },
+    { 
+      name: "Swapped", 
+      text: "A clever and hilarious body-swap story with great humor.", 
+      img: "https://m.media-amazon.com/images/M/MV5BMjMxOTM1OTM4MV5BMl5BanBnXkFtZTgwNzYxOTU4MDI@._V1_.jpg" 
+    },
+    { 
+      name: "War Machine", 
+      text: "A sharp and satirical take on modern warfare.", 
+      img: "https://www.themoviedb.org/t/p/w500/9Xp46uS7mP663H6m299oZz9fWf.jpg" 
+    },
+    { 
+      name: "Peaky Blinders", 
+      text: "Tommy Shelby returns in a dark and legendary saga conclusion.", 
+      img: "https://www.themoviedb.org/t/p/w500/v9S9S6m6mO8K89G6m6F66u9Y6y.jpg" 
+    }
   ];
 
   const handleAnalyze = () => {
     if (!inputText.trim()) return;
     setIsAnalyzing(true);
+
+    // Modern Sentiment Logic with an expanded dictionary for higher accuracy
     setTimeout(() => {
-      const pos = ['good', 'great', 'excellent', 'amazing', 'love', 'best', 'wonderful', 'masterpiece', 'classic', 'outstanding', 'perfect', 'incredible', 'visuals', 'legendary'];
-      const neg = ['bad', 'worst', 'awful', 'terrible', 'hate', 'boring', 'poor', 'waste', 'disappointing', 'horrible', 'dull', 'confusing'];
+      const pos = ['good', 'great', 'excellent', 'amazing', 'love', 'best', 'wonderful', 'masterpiece', 'classic', 'outstanding', 'perfect', 'incredible', 'brilliant', 'thrilling', 'satisfying', 'visuals', 'legendary', 'masterfully', 'balanced'];
+      const neg = ['bad', 'worst', 'awful', 'terrible', 'hate', 'boring', 'poor', 'waste', 'disappointing', 'horrible', 'dull', 'confusing', 'weak', 'fail', 'dreadful'];
       
       let score = 0.5;
       const words = inputText.toLowerCase().split(/\W+/);
-      words.forEach(w => {
-        if (pos.includes(w)) score += 0.15;
-        if (neg.includes(w)) score -= 0.15;
+      
+      words.forEach(word => {
+        if (pos.includes(word)) score += 0.15;
+        if (neg.includes(word)) score -= 0.15;
       });
+
       const finalScore = Math.min(Math.max(score, 0.05), 0.95);
       setResult({ positive: finalScore, negative: 1 - finalScore });
       setIsAnalyzing(false);
     }, 800);
   };
 
+  const handleClear = () => {
+    setInputText("");
+    setResult(null);
+  };
+
   return (
     <div className="app-container">
       <div className="card">
         <h1 className="title">CineSentiment AI</h1>
-        <p className="subtitle">Select a movie or type your review below</p>
+        <p className="subtitle">Select a movie or type a review below</p>
 
         <div className="movie-grid">
           {movieExamples.map((movie, index) => (
@@ -61,10 +94,14 @@ function App() {
         />
 
         <div className="button-row">
-          <button className="btn-analyze" onClick={handleAnalyze} disabled={isAnalyzing}>
+          <button 
+            className="btn-analyze" 
+            onClick={handleAnalyze} 
+            disabled={isAnalyzing}
+          >
             {isAnalyzing ? "🧠 Analyzing..." : "✨ Analyze Sentiment"}
           </button>
-          <button className="btn-clear" onClick={() => {setInputText(""); setResult(null);}}>
+          <button className="btn-clear" onClick={handleClear}>
             🗑️ Clear
           </button>
         </div>
