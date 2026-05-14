@@ -1,0 +1,8 @@
+# Python
+backend/cinesentiment_env/
+backend/__pycache__/
+
+# React
+frontend/node_modules/
+frontend/dist/
+.env
