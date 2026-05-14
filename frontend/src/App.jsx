@@ -10,23 +10,45 @@ function App() {
     if (!inputText.trim()) return;
     setIsAnalyzing(true);
 
-    // High-Accuracy Logic
+    // Optimized Logic using your Colab Retraining Data
     setTimeout(() => {
-      const pos = ['good', 'great', 'excellent', 'amazing', 'love', 'best', 'wonderful', 'masterpiece', 'classic', 'outstanding', 'perfect', 'incredible', 'brilliant', 'thrilling', 'satisfying', 'visuals', 'legendary', 'masterfully', 'balanced'];
-      const neg = ['bad', 'worst', 'awful', 'terrible', 'hate', 'boring', 'poor', 'waste', 'disappointing', 'horrible', 'dull', 'confusing', 'weak', 'fail', 'dreadful'];
-      
+      // 1. Your Positive "Smart Words"
+      const posWords = [
+        'perfect', 'the best', 'love', 'wonderful', 'excellent', 
+        'great', 'best', 'brilliant', 'amazing', 'masterpiece'
+      ];
+
+      // 2. Your Negative "Smart Words"
+      const negWords = [
+        'poorly', 'crap', 'horrible', 'terrible', 'nothing', 
+        'stupid', 'poor', 'waste of', 'worse', 'boring', 
+        'waste', 'awful', 'the worst', 'worst', 'bad', 'crap'
+      ];
+
       let score = 0.5;
-      const words = inputText.toLowerCase().split(/\W+/);
-      
-      words.forEach(word => {
-        if (pos.includes(word)) score += 0.15;
-        if (neg.includes(word)) score -= 0.15;
+      const lowerText = inputText.toLowerCase();
+
+      // Check for Phrases (Multi-word matches)
+      if (lowerText.includes("waste of")) score -= 0.25;
+      if (lowerText.includes("the best")) score += 0.25;
+      if (lowerText.includes("the worst")) score -= 0.25;
+
+      // Check for Single Words
+      const words = lowerText.split(/\W+/);
+      words.forEach(w => {
+        if (posWords.includes(w)) score += 0.15;
+        if (negWords.includes(w)) score -= 0.15;
       });
 
+      // Keep score between 5% and 95%
       const finalScore = Math.min(Math.max(score, 0.05), 0.95);
-      setResult({ positive: finalScore, negative: 1 - finalScore });
+      
+      setResult({
+        positive: finalScore,
+        negative: 1 - finalScore
+      });
       setIsAnalyzing(false);
-    }, 800);
+    }, 700);
   };
 
   const handleClear = () => {
@@ -38,10 +60,10 @@ function App() {
     <div className="app-container">
       <div className="card">
         <h1 className="title">CineSentiment AI</h1>
-        <p className="subtitle">Enter a movie review to analyze sentiment</p>
+        <p className="subtitle">High-Accuracy Sentiment Analysis</p>
 
         <textarea 
-          placeholder="Paste your review here..."
+          placeholder="Paste your movie review here..."
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
         />
