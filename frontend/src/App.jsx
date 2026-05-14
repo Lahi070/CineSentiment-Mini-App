@@ -6,27 +6,26 @@ function App() {
   const [result, setResult] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
-  // Movie samples with live poster images
   const samples = [
     { 
       name: "Madame Web", 
       text: "The plot was a bit confusing, but the visuals were decent.",
-      image: "https://image.tmdb.org/t/p/w500/r7DuyYJszNVn9XmkyEiw9idMGnS.jpg" 
+      image: "https://www.themoviedb.org/t/p/w500/r7DuyYJszNVn9XmkyEiw9idMGnS.jpg" 
     },
     { 
       name: "Prince of Persia", 
       text: "An absolute classic! The action sequences are still amazing.",
-      image: "https://image.tmdb.org/t/p/w500/98Xp46uS7mP663H6m299oZz9fWf.jpg"
+      image: "https://www.themoviedb.org/t/p/w500/98Xp46uS7mP663H6m299oZz9fWf.jpg"
     },
     { 
       name: "The Batman", 
       text: "Dark, gritty, and masterfully directed. Best superhero movie in years.",
-      image: "https://image.tmdb.org/t/p/w500/74xTEgt7R36FpZuB7buRmgPRO7B.jpg"
+      image: "https://www.themoviedb.org/t/p/w500/74xTEgt7R36FpZuB7buRmgPRO7B.jpg"
     },
     { 
       name: "Godzilla", 
       text: "The monsters were great, but the human characters felt a bit dull.",
-      image: "https://image.tmdb.org/t/p/w500/tMefBv7RSTCST9d6jnZzbvN0vUX.jpg"
+      image: "https://www.themoviedb.org/t/p/w500/tMefBv7RSTCST9d6jnZzbvN0vUX.jpg"
     }
   ];
 
@@ -34,7 +33,6 @@ function App() {
     if (!inputText.trim()) return;
     setIsAnalyzing(true);
 
-    // Artificial delay to simulate AI thinking
     setTimeout(() => {
       const posWords = ['good', 'great', 'excellent', 'amazing', 'love', 'best', 'wonderful', 'nice', 'awesome', 'masterpiece', 'classic', 'enjoyed', 'fantastic'];
       const negWords = ['bad', 'worst', 'awful', 'terrible', 'hate', 'boring', 'poor', 'waste', 'disappointing', 'horrible', 'dull', 'confusing', 'fail'];
@@ -43,11 +41,10 @@ function App() {
       const words = inputText.toLowerCase().split(/\W+/);
       
       words.forEach(w => {
-        if (posWords.includes(w)) score += 0.12;
-        if (negWords.includes(w)) score -= 0.12;
+        if (posWords.includes(w)) score += 0.15;
+        if (negWords.includes(w)) score -= 0.15;
       });
 
-      // Keep results between 2% and 98%
       const finalScore = Math.min(Math.max(score, 0.02), 0.98);
       
       setResult({
@@ -68,20 +65,36 @@ function App() {
 
         <div className="samples-grid">
           <p className="section-label">Try a sample review, or type your own:</p>
-          <div className="cards-container">
+          <div className="cards-container" style={{ display: 'flex', gap: '15px', overflowX: 'auto', padding: '10px 0' }}>
             {samples.map((s, i) => (
               <div 
                 key={i} 
                 className="movie-card" 
                 onClick={() => setInputText(s.text)}
                 style={{ 
+                  flex: '0 0 120px',
+                  height: '180px',
+                  borderRadius: '12px',
+                  cursor: 'pointer',
+                  position: 'relative',
                   backgroundImage: `url(${s.image})`,
                   backgroundSize: 'cover',
-                  backgroundPosition: 'center'
+                  backgroundPosition: 'center',
+                  boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
+                  border: '1px solid rgba(255,255,255,0.1)'
                 }}
               >
-                <div className="card-overlay">
-                  <span>{s.name}</span>
+                <div className="card-overlay" style={{ 
+                  position: 'absolute', 
+                  bottom: '0', 
+                  width: '100%', 
+                  background: 'rgba(0,0,0,0.7)', 
+                  padding: '5px', 
+                  textAlign: 'center', 
+                  borderBottomLeftRadius: '12px', 
+                  borderBottomRightRadius: '12px' 
+                }}>
+                  <span style={{ fontSize: '10px', color: 'white', fontWeight: 'bold' }}>{s.name}</span>
                 </div>
               </div>
             ))}
@@ -96,19 +109,10 @@ function App() {
             onChange={(e) => setInputText(e.target.value)}
           />
           <div className="button-group">
-            <button 
-              className="analyze-btn" 
-              onClick={handleAnalyze} 
-              disabled={isAnalyzing}
-            >
+            <button className="analyze-btn" onClick={handleAnalyze} disabled={isAnalyzing}>
               {isAnalyzing ? "🧠 Analyzing..." : "✨ Analyze Sentiment"}
             </button>
-            <button 
-              className="clear-btn" 
-              onClick={() => {setInputText(""); setResult(null);}}
-            >
-              Clear
-            </button>
+            <button className="clear-btn" onClick={() => {setInputText(""); setResult(null);}}>Clear</button>
           </div>
         </div>
 
@@ -119,16 +123,10 @@ function App() {
               <div className="score-box positive-box">
                 <p>Positive</p>
                 <span className="score-value">{(result.positive * 100).toFixed(1)}%</span>
-                <div className="progress-bar">
-                  <div className="progress-fill" style={{ width: `${result.positive * 100}%` }}></div>
-                </div>
               </div>
               <div className="score-box negative-box">
                 <p>Negative</p>
                 <span className="score-value">{(result.negative * 100).toFixed(1)}%</span>
-                <div className="progress-bar">
-                  <div className="progress-fill" style={{ width: `${result.negative * 100}%` }}></div>
-                </div>
               </div>
             </div>
           </div>
